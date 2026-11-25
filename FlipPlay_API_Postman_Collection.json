@@ -1,16 +1,33 @@
 {
   "info": {
     "_postman_id": "flipplay-rest-api-v1",
-    "name": "FlipPlay REST API - Modul 4",
+    "name": "FlipPlay REST API - Demo Modul 4",
     "description": "Koleksi Postman untuk Demo Praktikum Pemrograman Web Modul 4 - FlipPlay REST API (CRUD, Eloquent ORM, Relationships, Form Request Validation, API Resource, dan Error Handling).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "1. Media (CRUD)",
+      "name": "1. Media (CRUD Standar)",
       "item": [
         {
-          "name": "GET All Media (Happy Path 200)",
+          "name": "1. GET All Media (Happy Path 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Data response memiliki struktur API Resource\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('data');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -20,11 +37,30 @@
               "raw": "{{base_url}}/api/media",
               "host": ["{{base_url}}"],
               "path": ["api", "media"]
-            }
+            },
+            "description": "Mengambil seluruh katalog media dengan pagination dan relasi pengguna."
           }
         },
         {
-          "name": "GET Search Media by Title (Happy Path 200)",
+          "name": "2. GET Search Media by Title (Happy Path 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Media ditemukan sesuai kata kunci 'Piece'\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.length).to.be.above(0);",
+                  "    pm.expect(jsonData.data[0].judul).to.include('Piece');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -37,11 +73,31 @@
               "query": [
                 { "key": "search", "value": "Piece" }
               ]
-            }
+            },
+            "description": "Pencarian judul media menggunakan Query Scope scopeSearch()."
           }
         },
         {
-          "name": "GET Filter Media by Tipe (Happy Path 200)",
+          "name": "3. GET Filter Media by Tipe (Happy Path 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Hanya mengembalikan media bertipe Anime\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    jsonData.data.forEach(function(item) {",
+                  "        pm.expect(item.tipe).to.eql('Anime');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -54,11 +110,29 @@
               "query": [
                 { "key": "tipe", "value": "Anime" }
               ]
-            }
+            },
+            "description": "Filter media berdasarkan tipe menggunakan Query Scope scopeTipe()."
           }
         },
         {
-          "name": "POST Create Media (Happy Path 201)",
+          "name": "4. POST Create Media (Happy Path 201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Data media berhasil dibuat\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.judul).to.eql('Solo Leveling');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -73,11 +147,29 @@
               "raw": "{{base_url}}/api/media",
               "host": ["{{base_url}}"],
               "path": ["api", "media"]
-            }
+            },
+            "description": "Menambahkan media baru dengan HTTP Status 201 Created."
           }
         },
         {
-          "name": "POST Create Media - Judul Kosong (Failure Path 422)",
+          "name": "5. POST Create Media - Judul Kosong (Failure Path 422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 422 Unprocessable Entity\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "pm.test(\"Validasi pesan error judul muncul\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errors).to.have.property('judul');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -92,11 +184,29 @@
               "raw": "{{base_url}}/api/media",
               "host": ["{{base_url}}"],
               "path": ["api", "media"]
-            }
+            },
+            "description": "Pengujian validasi server-side Form Request ketika field wajib tidak diisi."
           }
         },
         {
-          "name": "POST Create Media - Judul Duplikat (Failure Path 422)",
+          "name": "6. POST Create Media - Judul Duplikat (Failure Path 422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 422 Unprocessable Entity\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "pm.test(\"Pesan error judul unik muncul\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errors.judul[0]).to.include('sudah ada di katalog');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -111,11 +221,30 @@
               "raw": "{{base_url}}/api/media",
               "host": ["{{base_url}}"],
               "path": ["api", "media"]
-            }
+            },
+            "description": "Pengujian validasi server-side rule unique:media,judul."
           }
         },
         {
-          "name": "GET Media by ID (Happy Path 200)",
+          "name": "7. GET Media by ID (Happy Path 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Detail media & relasi pengguna termuat\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.id).to.eql(1);",
+                  "    pm.expect(jsonData.data).to.have.property('pengguna_koleksi');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -125,11 +254,25 @@
               "raw": "{{base_url}}/api/media/1",
               "host": ["{{base_url}}"],
               "path": ["api", "media", "1"]
-            }
+            },
+            "description": "Menampilkan detail satu media beserta relasi pengguna yang mengoleksinya (Eager Loading)."
           }
         },
         {
-          "name": "GET Media by ID - Tidak Ditemukan (Failure Path 404)",
+          "name": "8. GET Media by ID - Tidak Ditemukan (Failure Path 404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404 Not Found\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -139,11 +282,30 @@
               "raw": "{{base_url}}/api/media/9999",
               "host": ["{{base_url}}"],
               "path": ["api", "media", "9999"]
-            }
+            },
+            "description": "Pengujian Route Model Binding otomatis mengembalikan status 404 saat ID tidak ada."
           }
         },
         {
-          "name": "PATCH Update Media (Happy Path 200)",
+          "name": "9. PATCH Update Media (Happy Path 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Rating dan status berhasil diperbarui\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.rating).to.eql(9.5);",
+                  "    pm.expect(jsonData.data.status).to.eql('Masterpiece');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "PATCH",
             "header": [
@@ -158,11 +320,25 @@
               "raw": "{{base_url}}/api/media/1",
               "host": ["{{base_url}}"],
               "path": ["api", "media", "1"]
-            }
+            },
+            "description": "Memperbarui sebagian data media menggunakan PATCH."
           }
         },
         {
-          "name": "DELETE Media (Happy Path 200)",
+          "name": "10. DELETE Media (Happy Path 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "header": [
@@ -172,7 +348,8 @@
               "raw": "{{base_url}}/api/media/5",
               "host": ["{{base_url}}"],
               "path": ["api", "media", "5"]
-            }
+            },
+            "description": "Menghapus media dari katalog."
           }
         }
       ]
@@ -181,7 +358,20 @@
       "name": "2. Users & Watchlist (Custom Actions & Relationship)",
       "item": [
         {
-          "name": "GET All Users (Happy Path 200)",
+          "name": "11. GET All Users (Happy Path 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -191,11 +381,29 @@
               "raw": "{{base_url}}/api/users",
               "host": ["{{base_url}}"],
               "path": ["api", "users"]
-            }
+            },
+            "description": "Menampilkan seluruh user beserta jumlah koleksi masing-masing."
           }
         },
         {
-          "name": "GET User Detail & Koleksi Media (Happy Path 200)",
+          "name": "12. GET User Detail & Koleksi Media (Happy Path 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Koleksi media termuat dalam profil user\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data).to.have.property('koleksi_media');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -205,11 +413,25 @@
               "raw": "{{base_url}}/api/users/1",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "1"]
-            }
+            },
+            "description": "Menampilkan detail user beserta daftar media yang dikoleksi via eager loading."
           }
         },
         {
-          "name": "GET User Collection Only (Happy Path 200)",
+          "name": "13. GET User Collection Only (Happy Path 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -219,11 +441,29 @@
               "raw": "{{base_url}}/api/users/1/collection",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "1", "collection"]
-            }
+            },
+            "description": "Menampilkan khusus daftar media yang ada di koleksi user."
           }
         },
         {
-          "name": "POST Add Media to Collection (Happy Path 201)",
+          "name": "14. POST Add Media to Collection (Happy Path 201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Pesan sukses penambahan koleksi muncul\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql('Media berhasil ditambahkan ke dalam koleksi');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -238,11 +478,29 @@
               "raw": "{{base_url}}/api/users/1/collection",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "1", "collection"]
-            }
+            },
+            "description": "Custom Action: Menambahkan media ke watchlist (relasi many-to-many attach)."
           }
         },
         {
-          "name": "POST Add Duplicate Media to Collection (Failure Path 409)",
+          "name": "15. POST Add Duplicate Media to Collection (Failure Path 409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 409 Conflict\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"Pesan error data duplikat muncul\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql('Media sudah ada di dalam koleksi pengguna');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -257,11 +515,25 @@
               "raw": "{{base_url}}/api/users/1/collection",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "1", "collection"]
-            }
+            },
+            "description": "Pengujian pencegahan duplikasi relasi (Status 409 Conflict sesuai Modul Bab 4.6)."
           }
         },
         {
-          "name": "POST Add Non-existent Media to Collection (Failure Path 422)",
+          "name": "16. POST Add Non-existent Media to Collection (Failure Path 422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 422 Unprocessable Entity\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -276,11 +548,25 @@
               "raw": "{{base_url}}/api/users/1/collection",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "1", "collection"]
-            }
+            },
+            "description": "Validasi foreign key media_id exists:media,id."
           }
         },
         {
-          "name": "PATCH Update Collection Status (Happy Path 200)",
+          "name": "17. PATCH Update Collection Status (Happy Path 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "PATCH",
             "header": [
@@ -295,11 +581,25 @@
               "raw": "{{base_url}}/api/users/1/collection/1",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "1", "collection", "1"]
-            }
+            },
+            "description": "Memperbarui atribut pada tabel pivot (status dan catatan)."
           }
         },
         {
-          "name": "DELETE Remove Media from Collection (Happy Path 200)",
+          "name": "18. DELETE Remove Media from Collection (Happy Path 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "header": [
@@ -309,11 +609,25 @@
               "raw": "{{base_url}}/api/users/1/collection/1",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "1", "collection", "1"]
-            }
+            },
+            "description": "Custom Action: Menghapus media dari watchlist (relasi many-to-many detach)."
           }
         },
         {
-          "name": "DELETE Remove Non-existent Media from Collection (Failure Path 404)",
+          "name": "19. DELETE Remove Non-existent Media from Collection (Failure Path 404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404 Not Found\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "header": [
@@ -323,7 +637,8 @@
               "raw": "{{base_url}}/api/users/1/collection/9999",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "1", "collection", "9999"]
-            }
+            },
+            "description": "Pengujian error 404 ketika media yang ingin dihapus tidak ada di koleksi pengguna."
           }
         }
       ]
