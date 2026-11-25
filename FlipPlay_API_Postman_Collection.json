@@ -1,0 +1,339 @@
+{
+  "info": {
+    "_postman_id": "flipplay-rest-api-v1",
+    "name": "FlipPlay REST API - Modul 4",
+    "description": "Koleksi Postman untuk Demo Praktikum Pemrograman Web Modul 4 - FlipPlay REST API (CRUD, Eloquent ORM, Relationships, Form Request Validation, API Resource, dan Error Handling).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Media (CRUD)",
+      "item": [
+        {
+          "name": "GET All Media (Happy Path 200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media",
+              "host": ["{{base_url}}"],
+              "path": ["api", "media"]
+            }
+          }
+        },
+        {
+          "name": "GET Search Media by Title (Happy Path 200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media?search=Piece",
+              "host": ["{{base_url}}"],
+              "path": ["api", "media"],
+              "query": [
+                { "key": "search", "value": "Piece" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Filter Media by Tipe (Happy Path 200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media?tipe=Anime",
+              "host": ["{{base_url}}"],
+              "path": ["api", "media"],
+              "query": [
+                { "key": "tipe", "value": "Anime" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Create Media (Happy Path 201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judul\": \"Solo Leveling\",\n  \"tipe\": \"Anime\",\n  \"genre\": \"Action, Fantasy\",\n  \"rating\": 8.5,\n  \"tahun\": 2024,\n  \"status\": \"Airing\",\n  \"episode\": 12,\n  \"studio\": \"A-1 Pictures\",\n  \"deskripsi\": \"Sung Jinwoo pemburu terlemah menjadi hunter terkuat.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/media",
+              "host": ["{{base_url}}"],
+              "path": ["api", "media"]
+            }
+          }
+        },
+        {
+          "name": "POST Create Media - Judul Kosong (Failure Path 422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipe\": \"Anime\",\n  \"tahun\": 2024\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/media",
+              "host": ["{{base_url}}"],
+              "path": ["api", "media"]
+            }
+          }
+        },
+        {
+          "name": "POST Create Media - Judul Duplikat (Failure Path 422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judul\": \"Attack on Titan\",\n  \"tipe\": \"Anime\",\n  \"tahun\": 2013\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/media",
+              "host": ["{{base_url}}"],
+              "path": ["api", "media"]
+            }
+          }
+        },
+        {
+          "name": "GET Media by ID (Happy Path 200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "media", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET Media by ID - Tidak Ditemukan (Failure Path 404)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media/9999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "media", "9999"]
+            }
+          }
+        },
+        {
+          "name": "PATCH Update Media (Happy Path 200)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 9.5,\n  \"status\": \"Masterpiece\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/media/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "media", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Media (Happy Path 200)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/media/5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "media", "5"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Users & Watchlist (Custom Actions & Relationship)",
+      "item": [
+        {
+          "name": "GET All Users (Happy Path 200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "GET User Detail & Koleksi Media (Happy Path 200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET User Collection Only (Happy Path 200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/1/collection",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1", "collection"]
+            }
+          }
+        },
+        {
+          "name": "POST Add Media to Collection (Happy Path 201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"media_id\": 2,\n  \"status\": \"Sedang Ditonton\",\n  \"catatan\": \"Episode 15, sangat berkesan\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/1/collection",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1", "collection"]
+            }
+          }
+        },
+        {
+          "name": "POST Add Duplicate Media to Collection (Failure Path 409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"media_id\": 1,\n  \"status\": \"Sedang Ditonton\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/1/collection",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1", "collection"]
+            }
+          }
+        },
+        {
+          "name": "POST Add Non-existent Media to Collection (Failure Path 422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"media_id\": 9999,\n  \"status\": \"Sedang Ditonton\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/1/collection",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1", "collection"]
+            }
+          }
+        },
+        {
+          "name": "PATCH Update Collection Status (Happy Path 200)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Selesai Ditonton\",\n  \"catatan\": \"Rating 9.8/10\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/1/collection/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1", "collection", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Remove Media from Collection (Happy Path 200)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/1/collection/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1", "collection", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Remove Non-existent Media from Collection (Failure Path 404)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/1/collection/9999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1", "collection", "9999"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    }
+  ]
+}
